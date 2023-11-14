@@ -1,5 +1,7 @@
 pub contract Stellar {
 
+    //pub var ownedNFTs: @{UInt64: NFT}
+
 
     pub var totalSupply: UInt64
 
@@ -23,6 +25,37 @@ pub contract Stellar {
     init() {
         self.totalSupply = 0
         self.account.save(<- create NFTMinter(), to: /storage/NFTMinter)
+        
+    }
+
+    pub resource Collection {
+        pub var ownedNFTs: @{UInt64: NFT}
+
+        pub fun deposit(token: @NFT) {
+            let tokenID = token.id
+            self.ownedNFTs[token.id] <-! token
+        }
+
+        pub fun withdraw(withdrawID: UInt64): @NFT {
+            let token <- self.ownedNFTs.remove(key: withdrawID) ?? panic("Token not in collection")
+            return <- token
+        }
+
+        pub fun getIDs(): [UInt64] {
+            return self.ownedNFTs.keys
+        }
+
+        init() {
+            self.ownedNFTs <- {}
+        }
+
+        destroy () {
+            destroy self.ownedNFTs
+        }
+    }
+
+    pub fun createEmptyCollection(): @Collection {
+        return <-create Collection()
     }
 
 }

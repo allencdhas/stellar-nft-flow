@@ -1,4 +1,4 @@
-import "NonFungibleToken"
+//import "NonFungibleToken"
 
 import NonFungibleToken from "./NonFungibleToken.cdc"
 

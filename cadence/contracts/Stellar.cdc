@@ -1,4 +1,8 @@
-pub contract Stellar {
+import "NonFungibleToken"
+
+import NonFungibleToken from "./NonFungibleToken.cdc"
+
+pub contract Stellar: NonFungibleToken {
 
     //pub var ownedNFTs: @{UInt64: NFT}
 
@@ -26,6 +30,12 @@ pub contract Stellar {
         self.totalSupply = 0
         self.account.save(<- create NFTMinter(), to: /storage/NFTMinter)
         
+    }
+
+    //Collection Interface!! -- Collection block ->
+    pub resource interface CollectionPublic {
+        pub fun deposit(token: @NFT)
+        pub fun getIDs(): [UInt64]
     }
 
     pub resource Collection {
